@@ -1,4 +1,5 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -9,6 +10,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final _auth = FirebaseAuth.instance;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -104,9 +106,18 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                       ),
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, "/HomeScreen", (route) => false);
+                        try {
+                          if (_formKey.currentState!.validate()) {
+                            _auth.signInWithEmailAndPassword(
+                                email: emailController.text,
+                                password: passwordController.text);
+                            print(emailController.text);
+                            print(passwordController.text);
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, "/HomeScreen", (route) => false);
+                          }
+                        } catch (e) {
+                          print(e);
                         }
                       },
                       child: const Text(

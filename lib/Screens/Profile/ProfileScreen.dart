@@ -1,15 +1,27 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-
+import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  ProfileScreen({Key? key}) : super(key: key);
+  final _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
-        Text('Profile')
+      children: [
+        const Text('Profile'),
+        Text(_auth.currentUser!.email.toString()),
+        Text(_auth.currentUser!.uid),
+        IconButton(
+            onPressed: () {
+              _auth.signOut();
+            },
+            icon: const Icon(
+              Icons.logout_outlined,
+              size: 25,
+            ),),
       ],
     );
   }
