@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -9,6 +10,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final _auth = FirebaseAuth.instance;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -124,16 +126,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 60,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(35.0),
                           ),
                         ),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, "/HomeScreen", (route) => false);
+                          try {
+                            await _auth.createUserWithEmailAndPassword(
+                                email: emailController.text,
+                                password: passwordController.text);
+                            print(emailController.text);
+                            print(passwordController.text);
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, "/HomeScreen", (route) => false);
+                          } catch (e) {
+                            print("Error while sign up ${e.toString()}");
+                          }
                         }
                       },
                       child: const Text(

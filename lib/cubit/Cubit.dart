@@ -8,7 +8,7 @@ part 'State.dart';
 class AppCubit extends Cubit<AppCubitState> {
   AppCubit() : super(AppCubitInitial());
   static AppCubit get(context) => BlocProvider.of(context);
-  List<Widget> screenList = const [
+  List<Widget> screenList =  [
     PeopleScreen(),
     ProfileScreen(),
   ];
