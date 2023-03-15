@@ -106,8 +106,8 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                       ),
                       onPressed: () {
-                        try {
-                          if (_formKey.currentState!.validate()) {
+                        if (_formKey.currentState!.validate()) {
+                          try {
                             _auth.signInWithEmailAndPassword(
                                 email: emailController.text,
                                 password: passwordController.text);
@@ -115,9 +115,9 @@ class _SignInScreenState extends State<SignInScreen> {
                             print(passwordController.text);
                             Navigator.pushNamedAndRemoveUntil(
                                 context, "/HomeScreen", (route) => false);
+                          } catch (e) {
+                            print(e);
                           }
-                        } catch (e) {
-                          print(e);
                         }
                       },
                       child: const Text(
