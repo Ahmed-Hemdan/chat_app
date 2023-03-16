@@ -25,7 +25,14 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamed(context, "/WelcomeScreen");
+          },
+        ),
+      ),
       body: SafeArea(
         child: Center(
           child: Form(
@@ -108,13 +115,16 @@ class _SignInScreenState extends State<SignInScreen> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           try {
-                            _auth.signInWithEmailAndPassword(
-                                email: emailController.text,
-                                password: passwordController.text);
+                            _auth
+                                .signInWithEmailAndPassword(
+                                    email: emailController.text,
+                                    password: passwordController.text)
+                                .then(
+                                  (value) => Navigator.pushNamedAndRemoveUntil(
+                                      context, "/HomeScreen", (route) => false),
+                                );
                             print(emailController.text);
                             print(passwordController.text);
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, "/HomeScreen", (route) => false);
                           } catch (e) {
                             print(e);
                           }

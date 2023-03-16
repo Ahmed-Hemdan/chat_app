@@ -6,3 +6,5 @@ abstract class AppCubitState {}
 class AppCubitInitial extends AppCubitState {}
 
 class ChangeCurrentIndexForScreens extends AppCubitState{}
+
+class CreateUserToFirebase extends AppCubitState{}

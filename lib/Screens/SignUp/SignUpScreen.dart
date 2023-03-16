@@ -1,3 +1,5 @@
+import 'package:chat_app/Models/UserModel.dart';
+import 'package:chat_app/cubit/Cubit.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,6 +20,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final emailregex = RegExp(
       "^[a-zA-Z0-9.!#%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*");
 
+  UserModel user = UserModel();
   @override
   void dispose() {
     nameController.dispose();
@@ -29,7 +32,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamed(context, "/WelcomeScreen"); 
+          },
+        ),
+      ),
       body: SafeArea(
         child: Center(
           child: Form(
@@ -135,7 +145,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
+                          user = UserModel(
+                            name: nameController.text,
+                            email: emailController.text,
+                            password: passwordController.text,
+                            id: _auth.currentUser!.uid,
+                          );
                           try {
+                            AppCubit.get(context).createUser(user);
                             await _auth.createUserWithEmailAndPassword(
                                 email: emailController.text,
                                 password: passwordController.text);

@@ -12,9 +12,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
- await Firebase.initializeApp();
+  await Firebase.initializeApp();
   Bloc.observer = MyBlocObserver();
   runApp(const MyApp());
 }
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
             title: 'Chat App',
             initialRoute: "/",
             routes: {
-              "/":(context) => const SplashScreen(),
+              "/": (context) => const SplashScreen(),
               "/WelcomeScreen": (context) => const WelcomeScreen(),
               "/SignUpScreen": (context) => const SignUpScreen(),
               "/SignInScreen": (context) => const SignInScreen(),
@@ -46,7 +46,6 @@ class MyApp extends StatelessWidget {
             theme: lightTheme(),
             darkTheme: darkTheme(),
             themeMode: ThemeMode.light,
-           
           );
         },
       ),

@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -15,13 +14,16 @@ class ProfileScreen extends StatelessWidget {
         Text(_auth.currentUser!.email.toString()),
         Text(_auth.currentUser!.uid),
         IconButton(
-            onPressed: () {
-              _auth.signOut();
-            },
-            icon: const Icon(
-              Icons.logout_outlined,
-              size: 25,
-            ),),
+          onPressed: () {
+            _auth.signOut();
+            Navigator.pushNamedAndRemoveUntil(
+                context, "/WelcomeScreen", (route) => false);
+          },
+          icon: const Icon(
+            Icons.logout_outlined,
+            size: 25,
+          ),
+        ),
       ],
     );
   }
