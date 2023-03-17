@@ -112,10 +112,10 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           try {
-                            _auth
+                            await _auth
                                 .signInWithEmailAndPassword(
                                     email: emailController.text,
                                     password: passwordController.text)
@@ -123,10 +123,12 @@ class _SignInScreenState extends State<SignInScreen> {
                                   (value) => Navigator.pushNamedAndRemoveUntil(
                                       context, "/HomeScreen", (route) => false),
                                 );
-                            print(emailController.text);
-                            print(passwordController.text);
-                          } catch (e) {
-                            print(e);
+                          } on FirebaseAuthException catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(e.code),
+                              ),
+                            );
                           }
                         }
                       },

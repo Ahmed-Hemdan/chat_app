@@ -151,53 +151,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     email: emailController.text,
                                     password: passwordController.text)
                                 .then((value) {
-                              user = UserModel(
-                                name: nameController.text,
-                                email: emailController.text,
-                                password: passwordController.text,
-                                id: _auth.currentUser!.uid,
-                              );
+                              AppCubit.get(context)
+                                  .createUser(user)
+                                  .then((value) {
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, "/HomeScreen", (route) => false);
+                              });
                             });
-                          } on FirebaseAuthException catch (error) {
-                            print("Failed with error code : ${error.code}");
-                            print(error.code);
+                          } on FirebaseException catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(e.code),
+                              ),
+                            );
                           }
                         }
-                        // if (_formKey.currentState!.validate()) {
-                        //   try {
-                        //     AppCubit.get(context).createUser(user);
-                        //     await _auth.createUserWithEmailAndPassword(
-                        //         email: emailController.text,
-                        //         password: passwordController.text);
-                        //     user = UserModel(
-                        //       name: nameController.text,
-                        //       email: emailController.text,
-                        //       password: passwordController.text,
-                        //       id: _auth.currentUser!.uid,
-                        //     );
-                        //     print(emailController.text);
-                        //     print(passwordController.text);
-                        //     Navigator.pushNamedAndRemoveUntil(
-                        //         context, "/HomeScreen", (route) => false);
-                        //   } on FirebaseAuthException catch (error) {
-                        //     if (error.code == "email-already-in-use") {
-                        //       AlertDialog(
-                        //         content: const Text(
-                        //             "The account is already exists for that email"),
-                        //         actions: [
-                        //           TextButton(
-                        //             onPressed: () {
-                        //               Navigator.pop(context);
-                        //             },
-                        //             child: const Text("Okay"),
-                        //           ),
-                        //         ],
-                        //       );
-                        //     }
-                        //   } catch (e) {
-                        //     print("Error while sign up ${e.toString()}");
-                        //   }
-                        // }
                       },
                       child: const Text(
                         'Sign up',
