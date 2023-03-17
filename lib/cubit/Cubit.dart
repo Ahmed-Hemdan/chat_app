@@ -11,7 +11,7 @@ class AppCubit extends Cubit<AppCubitState> {
   AppCubit() : super(AppCubitInitial());
   static AppCubit get(context) => BlocProvider.of(context);
   List<Widget> screenList = [
-    PeopleScreen(),
+    const PeopleScreen(),
     ProfileScreen(),
   ];
   List<String> screenName = const [
@@ -41,12 +41,25 @@ class AppCubit extends Cubit<AppCubitState> {
     emit(ChangeCurrentIndexForScreens());
   }
 
-  Future<void>createUser(UserModel user) async {
+  Future<void> createUser(UserModel user) async {
     try {
-     await _db.collection("Users").add(user.toJson());
+      await _db.collection("Users").add(user.toJson());
     } catch (error) {
       print(error);
     }
     emit(CreateUserToFirebase());
   }
+//   final FirebaseStorage storage = FirebaseStorage.instance;
+
+// final Reference reference = storage.ref().child('profile_images/${userId}');
+
+// final ImagePicker _picker = ImagePicker();
+
+// final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+// final File file = File(image!.path);
+
+// final TaskSnapshot taskSnapshot = await reference.putFile(file);
+
+// final String imageUrl = await taskSnapshot.ref.getDownloadURL();
 }
