@@ -36,7 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushNamed(context, "/WelcomeScreen"); 
+            Navigator.pushNamed(context, "/WelcomeScreen");
           },
         ),
       ),
@@ -145,25 +145,59 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          user = UserModel(
-                            name: nameController.text,
-                            email: emailController.text,
-                            password: passwordController.text,
-                            id: _auth.currentUser!.uid,
-                          );
                           try {
-                            AppCubit.get(context).createUser(user);
-                            await _auth.createUserWithEmailAndPassword(
+                            await _auth
+                                .createUserWithEmailAndPassword(
+                                    email: emailController.text,
+                                    password: passwordController.text)
+                                .then((value) {
+                              user = UserModel(
+                                name: nameController.text,
                                 email: emailController.text,
-                                password: passwordController.text);
-                            print(emailController.text);
-                            print(passwordController.text);
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, "/HomeScreen", (route) => false);
-                          } catch (e) {
-                            print("Error while sign up ${e.toString()}");
+                                password: passwordController.text,
+                                id: _auth.currentUser!.uid,
+                              );
+                            });
+                          } on FirebaseAuthException catch (error) {
+                            print("Failed with error code : ${error.code}");
+                            print(error.code);
                           }
                         }
+                        // if (_formKey.currentState!.validate()) {
+                        //   try {
+                        //     AppCubit.get(context).createUser(user);
+                        //     await _auth.createUserWithEmailAndPassword(
+                        //         email: emailController.text,
+                        //         password: passwordController.text);
+                        //     user = UserModel(
+                        //       name: nameController.text,
+                        //       email: emailController.text,
+                        //       password: passwordController.text,
+                        //       id: _auth.currentUser!.uid,
+                        //     );
+                        //     print(emailController.text);
+                        //     print(passwordController.text);
+                        //     Navigator.pushNamedAndRemoveUntil(
+                        //         context, "/HomeScreen", (route) => false);
+                        //   } on FirebaseAuthException catch (error) {
+                        //     if (error.code == "email-already-in-use") {
+                        //       AlertDialog(
+                        //         content: const Text(
+                        //             "The account is already exists for that email"),
+                        //         actions: [
+                        //           TextButton(
+                        //             onPressed: () {
+                        //               Navigator.pop(context);
+                        //             },
+                        //             child: const Text("Okay"),
+                        //           ),
+                        //         ],
+                        //       );
+                        //     }
+                        //   } catch (e) {
+                        //     print("Error while sign up ${e.toString()}");
+                        //   }
+                        // }
                       },
                       child: const Text(
                         'Sign up',
