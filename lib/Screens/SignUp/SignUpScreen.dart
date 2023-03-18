@@ -4,30 +4,12 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatelessWidget {
+  SignUpScreen({Key? key}) : super(key: key);
 
-  @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
-}
-
-class _SignUpScreenState extends State<SignUpScreen> {
-  final _auth = FirebaseAuth.instance;
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final emailregex = RegExp(
-      "^[a-zA-Z0-9.!#%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*");
 
-  UserModel user = UserModel();
-  @override
-  void dispose() {
-    nameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
+  final emailregex = RegExp("^[a-zA-Z0-9.!#%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*");
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +43,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: SizedBox(
                     width: 370,
                     child: TextFormField(
-                      controller: nameController,
+                      controller: AppCubit.get(context).nameController,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your name';
@@ -85,7 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: SizedBox(
                     width: 370,
                     child: TextFormField(
-                      controller: emailController,
+                      controller: AppCubit.get(context).emailController,
                       validator: (value) {
                         if (value != null && EmailValidator.validate(value)) {
                           return null;
@@ -110,7 +92,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: SizedBox(
                     width: 370,
                     child: TextFormField(
-                      controller: passwordController,
+                      controller: AppCubit.get(context).passwordController,
                       validator: (value) {
                         if (value!.length < 6 || value.isEmpty) {
                           return 'Please enter a valid password';
@@ -136,8 +118,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 60,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(35.0),
                           ),
@@ -146,18 +127,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           try {
-                            await _auth
+                            await AppCubit.get(context)
+                                .auth
                                 .createUserWithEmailAndPassword(
-                                    email: emailController.text,
-                                    password: passwordController.text)
-                                .then((value) {
-                              AppCubit.get(context)
-                                  .createUser(user)
-                                  .then((value) {
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context, "/HomeScreen", (route) => false);
-                              });
-                            });
+                                  email: AppCubit.get(context).emailController.text,
+                                  password: AppCubit.get(context).passwordController.text,
+                                )
+                                .then(
+                              (value) async {
+                                await AppCubit.get(context).auth.currentUser!.sendEmailVerification().then(
+                                      (value) => Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        "/VerificationScreen",
+                                        (route) => false,
+                                      ),
+                                    );
+                              },
+                            );
                           } on FirebaseException catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
