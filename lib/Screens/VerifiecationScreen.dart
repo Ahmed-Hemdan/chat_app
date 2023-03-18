@@ -37,16 +37,11 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 ),
               ),
             ),
-            BlocConsumer<AppCubit, AppCubitState>(
-              listener: (context, state) {},
-              builder: (context, state) {
-                return ElevatedButton(
-                  onPressed: () {
-                    AppCubit.get(context).checkEmailVerificationn(context);
-                  },
-                  child: const Text("continue"),
-                );
+            ElevatedButton(
+              onPressed: () {
+                AppCubit.get(context).checkEmailVerificationn(context);
               },
+              child: const Text("continue"),
             ),
           ],
         ),

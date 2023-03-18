@@ -126,31 +126,7 @@ class SignUpScreen extends StatelessWidget {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          try {
-                            await AppCubit.get(context)
-                                .auth
-                                .createUserWithEmailAndPassword(
-                                  email: AppCubit.get(context).emailController.text,
-                                  password: AppCubit.get(context).passwordController.text,
-                                )
-                                .then(
-                              (value) async {
-                                await AppCubit.get(context).auth.currentUser!.sendEmailVerification().then(
-                                      (value) => Navigator.pushNamedAndRemoveUntil(
-                                        context,
-                                        "/VerificationScreen",
-                                        (route) => false,
-                                      ),
-                                    );
-                              },
-                            );
-                          } on FirebaseException catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(e.code),
-                              ),
-                            );
-                          }
+                          AppCubit.get(context).registerNewUser(context);
                         }
                       },
                       child: const Text(

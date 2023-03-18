@@ -1,3 +1,4 @@
+import 'package:chat_app/cubit/Cubit.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +55,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: SizedBox(
                     width: 370,
                     child: TextFormField(
-                      controller: emailController,
+                      controller: AppCubit.get(context).emailController,
                       validator: (value) {
                         if (value != null && EmailValidator.validate(value)) {
                           return null;
@@ -79,7 +80,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: SizedBox(
                     width: 370,
                     child: TextFormField(
-                      controller: passwordController,
+                      controller: AppCubit.get(context).passwordController,
                       validator: (value) {
                         if (value!.length < 6 || value.isEmpty) {
                           return 'Please enter a valid password';
@@ -105,8 +106,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     height: 60,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(35.0),
                           ),
@@ -114,22 +114,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          try {
-                            await _auth
-                                .signInWithEmailAndPassword(
-                                    email: emailController.text,
-                                    password: passwordController.text)
-                                .then(
-                                  (value) => Navigator.pushNamedAndRemoveUntil(
-                                      context, "/HomeScreen", (route) => false),
-                                );
-                          } on FirebaseAuthException catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(e.code),
-                              ),
-                            );
-                          }
+                          AppCubit.get(context).singin(context);
                         }
                       },
                       child: const Text(
