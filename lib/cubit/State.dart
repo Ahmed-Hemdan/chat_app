@@ -10,3 +10,7 @@ class ChangeCurrentIndexForScreens extends AppCubitState {}
 class CreateUserToFirebase extends AppCubitState {}
 
 class CheckEmailVerification extends AppCubitState {}
+
+class RegisterNewUserInOuthentication extends AppCubitState {}
+
+class SignIn extends AppCubitState {}

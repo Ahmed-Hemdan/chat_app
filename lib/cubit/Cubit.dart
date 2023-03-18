@@ -47,7 +47,37 @@ class AppCubit extends Cubit<AppCubitState> {
     emit(ChangeCurrentIndexForScreens());
   }
 
-  Future<void> createUser(UserModel user) async {
+  UserCredential? userCredential;
+  User? theUser = FirebaseAuth.instance.currentUser;
+  registerNewUser(context) async {
+    try {
+      userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      )
+          .then(
+        (value) async {
+          await theUser!.sendEmailVerification().then(
+                (value) => Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  "/VerificationScreen",
+                  (route) => false,
+                ),
+              );
+        },
+      );
+    } on FirebaseException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.code),
+        ),
+      );
+    }
+    emit(RegisterNewUserInOuthentication());
+  }
+
+  Future<void> createUserOnCollection(UserModel user) async {
     try {
       await _db.collection("Users").add(user.toJson());
     } catch (error) {
@@ -56,16 +86,36 @@ class AppCubit extends Cubit<AppCubitState> {
     emit(CreateUserToFirebase());
   }
 
+  singin(context) async {
+    try {
+      userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+            email: emailController.text,
+            password: passwordController.text,
+          )
+          .then(
+            (value) => Navigator.pushNamedAndRemoveUntil(context, "/HomeScreen", (route) => false),
+          );
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.code),
+        ),
+      );
+    }
+    emit(SignIn());
+  }
+
   UserModel user = UserModel();
   void checkEmailVerificationn(BuildContext context) {
-    if (AppCubit.get(context).auth.currentUser!.emailVerified == true) {
+    if (theUser!.emailVerified == true) {
       user = UserModel(
         name: AppCubit.get(context).nameController.text,
         email: AppCubit.get(context).emailController.text,
         id: AppCubit.get(context).auth.currentUser!.uid,
         password: AppCubit.get(context).passwordController.text,
       );
-      AppCubit.get(context).createUser(user).then((value) {
+      AppCubit.get(context).createUserOnCollection(user).then((value) {
         Navigator.pushNamedAndRemoveUntil(
           context,
           "/HomeScreen",
