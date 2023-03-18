@@ -14,8 +14,8 @@ class ProfileScreen extends StatelessWidget {
         Text(_auth.currentUser!.email.toString()),
         Text(_auth.currentUser!.uid),
         IconButton(
-          onPressed: () {
-            _auth.signOut();
+          onPressed: () async {
+            await _auth.signOut();
             Navigator.pushNamedAndRemoveUntil(
                 context, "/WelcomeScreen", (route) => false);
           },
