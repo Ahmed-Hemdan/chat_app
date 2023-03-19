@@ -4,7 +4,7 @@ import 'package:chat_app/Screens/Profile/ProfileScreen.dart';
 import 'package:chat_app/Screens/SignIn/SignInScreen.dart';
 import 'package:chat_app/Screens/SignUp/SignUpScreen.dart';
 import 'package:chat_app/Screens/Splash/SplashScreen.dart';
-import 'package:chat_app/Screens/VerifiecationScreen.dart';
+import 'package:chat_app/Screens/Verification/VerifiecationScreen.dart';
 import 'package:chat_app/Screens/Welcome/WelcomeScreen.dart';
 import 'package:chat_app/Themes/Themes.dart';
 import 'package:chat_app/cubit/BlocObserver.dart';
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
             routes: {
               "/": (context) => const SplashScreen(),
               "/WelcomeScreen": (context) => const WelcomeScreen(),
-              "/SignUpScreen": (context) =>  SignUpScreen(),
+              "/SignUpScreen": (context) => const SignUpScreen(),
               "/SignInScreen": (context) => const SignInScreen(),
               "/VerificationScreen":(context) =>  VerificationScreen(),
               "/HomeScreen": (context) => const HomeScreen(),

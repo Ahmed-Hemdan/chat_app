@@ -1,13 +1,26 @@
-import 'package:chat_app/Models/UserModel.dart';
 import 'package:chat_app/cubit/Cubit.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-class SignUpScreen extends StatelessWidget {
-  SignUpScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
 
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   final emailregex = RegExp("^[a-zA-Z0-9.!#%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*");
 
@@ -43,7 +56,7 @@ class SignUpScreen extends StatelessWidget {
                   child: SizedBox(
                     width: 370,
                     child: TextFormField(
-                      controller: AppCubit.get(context).nameController,
+                      controller: nameController,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your name';
@@ -67,7 +80,7 @@ class SignUpScreen extends StatelessWidget {
                   child: SizedBox(
                     width: 370,
                     child: TextFormField(
-                      controller: AppCubit.get(context).emailController,
+                      controller: emailController,
                       validator: (value) {
                         if (value != null && EmailValidator.validate(value)) {
                           return null;
@@ -92,7 +105,7 @@ class SignUpScreen extends StatelessWidget {
                   child: SizedBox(
                     width: 370,
                     child: TextFormField(
-                      controller: AppCubit.get(context).passwordController,
+                      controller: passwordController,
                       validator: (value) {
                         if (value!.length < 6 || value.isEmpty) {
                           return 'Please enter a valid password';
@@ -126,7 +139,14 @@ class SignUpScreen extends StatelessWidget {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          AppCubit.get(context).registerNewUser(context);
+                          AppCubit.get(context).userName = nameController.text;
+                          AppCubit.get(context).userEmail = emailController.text;
+                          AppCubit.get(context).userPassword = passwordController.text;
+                          AppCubit.get(context).registerNewUser(
+                            context,
+                            emailController.text,
+                            passwordController.text,
+                          );
                         }
                       },
                       child: const Text(
