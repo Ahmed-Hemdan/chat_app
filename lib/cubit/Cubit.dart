@@ -37,9 +37,9 @@ class AppCubit extends Cubit<AppCubitState> {
 
   final _db = FirebaseFirestore.instance;
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  String? userName;
+  String? userEmail;
+  String? userPassword;
   FirebaseAuth auth = FirebaseAuth.instance;
 
   void changeCurrentIndex(int index) {
@@ -47,18 +47,16 @@ class AppCubit extends Cubit<AppCubitState> {
     emit(ChangeCurrentIndexForScreens());
   }
 
-  UserCredential? userCredential;
-  User? theUser = FirebaseAuth.instance.currentUser;
-  registerNewUser(context) async {
+  registerNewUser(context, String email, String password) async {
     try {
-      userCredential = await FirebaseAuth.instance
+      await auth
           .createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
+        email: email,
+        password: password,
       )
           .then(
         (value) async {
-          await theUser!.sendEmailVerification().then(
+          await auth.currentUser!.sendEmailVerification().then(
                 (value) => Navigator.pushNamedAndRemoveUntil(
                   context,
                   "/VerificationScreen",
@@ -86,12 +84,12 @@ class AppCubit extends Cubit<AppCubitState> {
     emit(CreateUserToFirebase());
   }
 
-  singin(context) async {
+  singin(context, String email, String password) async {
     try {
-      userCredential = await FirebaseAuth.instance
+    await  auth
           .signInWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text,
+            email: email,
+            password: password,
           )
           .then(
             (value) => Navigator.pushNamedAndRemoveUntil(context, "/HomeScreen", (route) => false),
@@ -108,12 +106,12 @@ class AppCubit extends Cubit<AppCubitState> {
 
   UserModel user = UserModel();
   void checkEmailVerificationn(BuildContext context) {
-    if (theUser!.emailVerified == true) {
+    if (auth.currentUser!.emailVerified == true) {
       user = UserModel(
-        name: AppCubit.get(context).nameController.text,
-        email: AppCubit.get(context).emailController.text,
-        id: AppCubit.get(context).auth.currentUser!.uid,
-        password: AppCubit.get(context).passwordController.text,
+        name: userName,
+        email: userEmail,
+        id: auth.currentUser!.uid,
+        password: userPassword,
       );
       AppCubit.get(context).createUserOnCollection(user).then((value) {
         Navigator.pushNamedAndRemoveUntil(
@@ -133,6 +131,7 @@ class AppCubit extends Cubit<AppCubitState> {
           ),
         ),
       );
+      print(auth.currentUser);
       print(AppCubit.get(context).auth.currentUser!.email);
       print(AppCubit.get(context).auth.currentUser!.emailVerified);
     }

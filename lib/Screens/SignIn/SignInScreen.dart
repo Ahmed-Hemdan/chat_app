@@ -1,6 +1,6 @@
 import 'package:chat_app/cubit/Cubit.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -11,7 +11,6 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final _auth = FirebaseAuth.instance;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -55,7 +54,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: SizedBox(
                     width: 370,
                     child: TextFormField(
-                      controller: AppCubit.get(context).emailController,
+                      controller: emailController,
                       validator: (value) {
                         if (value != null && EmailValidator.validate(value)) {
                           return null;
@@ -80,7 +79,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: SizedBox(
                     width: 370,
                     child: TextFormField(
-                      controller: AppCubit.get(context).passwordController,
+                      controller: passwordController,
                       validator: (value) {
                         if (value!.length < 6 || value.isEmpty) {
                           return 'Please enter a valid password';
@@ -114,7 +113,11 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          AppCubit.get(context).singin(context);
+                          AppCubit.get(context).singin(
+                            context,
+                            emailController.text,
+                            passwordController.text,
+                          );
                         }
                       },
                       child: const Text(
