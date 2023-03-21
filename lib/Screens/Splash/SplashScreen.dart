@@ -1,4 +1,5 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:chat_app/Screens/Messages/MessagesScreen.dart';
 import 'package:chat_app/Screens/Welcome/WelcomeScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,7 @@ class SplashScreen extends StatelessWidget {
           color: Colors.blue,
           size: 130,
         ),
-        nextScreen: const WelcomeScreen(),
+        nextScreen: const MessagesScreen(),
       ),
     );
   }

@@ -12,7 +12,7 @@ class AppCubit extends Cubit<AppCubitState> {
   AppCubit() : super(AppCubitInitial());
   static AppCubit get(context) => BlocProvider.of(context);
   List<Widget> screenList = [
-    const PeopleScreen(),
+    PeopleScreen(),
     ProfileScreen(),
   ];
   List<String> screenName = const [
@@ -77,7 +77,7 @@ class AppCubit extends Cubit<AppCubitState> {
 
   Future<void> createUserOnCollection(UserModel user) async {
     try {
-      await _db.collection("Users").add(user.toJson());
+      await _db.collection("Users").doc(auth.currentUser!.uid).set(user.toJson());
     } catch (error) {
       print(error);
     }
@@ -86,14 +86,10 @@ class AppCubit extends Cubit<AppCubitState> {
 
   singin(context, String email, String password) async {
     try {
-    await  auth
-          .signInWithEmailAndPassword(
-            email: email,
-            password: password,
-          )
-          .then(
-            (value) => Navigator.pushNamedAndRemoveUntil(context, "/HomeScreen", (route) => false),
-          );
+      await auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -137,6 +133,21 @@ class AppCubit extends Cubit<AppCubitState> {
     }
     emit(CheckEmailVerification());
   }
+
+  String? theNameOfUser;
+  getNameOfUser() async {
+    await _db.collection("Users").where("id", isEqualTo: auth.currentUser!.uid).get().then(
+          (value) => {
+            value.docs.forEach(
+              (element) {
+                theNameOfUser = element.data()["name"];
+              },
+            ),
+          },
+        );
+    emit(GetTheNameOfUser());
+  }
+
 //   final FirebaseStorage storage = FirebaseStorage.instance;
 
 // final Reference reference = storage.ref().child('profile_images/${userId}');

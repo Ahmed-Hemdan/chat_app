@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
               "/SignInScreen": (context) => const SignInScreen(),
               "/VerificationScreen":(context) =>  VerificationScreen(),
               "/HomeScreen": (context) => const HomeScreen(),
-              "/PeopleScreen": (context) => const PeopleScreen(),
+              "/PeopleScreen": (context) => PeopleScreen(),
               "/ProfileScreen": (context) => ProfileScreen(),
             },
             theme: lightTheme(),
