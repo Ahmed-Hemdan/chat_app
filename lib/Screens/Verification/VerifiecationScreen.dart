@@ -39,7 +39,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await AppCubit.get(context).auth.currentUser!.reload().then((value) => AppCubit.get(context).checkEmailVerificationn(context));
+                await AppCubit.get(context).auth.currentUser!.reload().then((value) {
+                  AppCubit.get(context).checkEmailVerificationn(context);
+                }).then((value) => AppCubit.get(context).getNameOfUser());
               },
               child: const Text("continue"),
             ),

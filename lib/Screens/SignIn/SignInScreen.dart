@@ -113,11 +113,16 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          AppCubit.get(context).singin(
-                            context,
-                            emailController.text,
-                            passwordController.text,
-                          );
+                          AppCubit.get(context)
+                              .singin(
+                                context,
+                                emailController.text,
+                                passwordController.text,
+                              )
+                              .then((value) => AppCubit.get(context).getNameOfUser())
+                              .then(
+                                (value) => Navigator.pushNamedAndRemoveUntil(context, "/HomeScreen", (route) => false),
+                              );
                         }
                       },
                       child: const Text(

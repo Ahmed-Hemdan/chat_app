@@ -35,128 +35,130 @@ class _SignUpScreenState extends State<SignUpScreen> {
           },
         ),
       ),
-      body: SafeArea(
-        child: Center(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 30,
-                ),
-                Text(
-                  "Sign up ",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: 370,
-                    child: TextFormField(
-                      controller: nameController,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your name';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        label: const Text(
-                          'Name',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                      ),
-                    ),
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Center(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 30,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: 370,
-                    child: TextFormField(
-                      controller: emailController,
-                      validator: (value) {
-                        if (value != null && EmailValidator.validate(value)) {
+                  Text(
+                    "Sign up ",
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: 370,
+                      child: TextFormField(
+                        controller: nameController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter your name';
+                          }
                           return null;
-                        } else {
-                          return 'Please enter a valid email !!';
-                        }
-                      },
-                      decoration: InputDecoration(
-                        label: const Text(
-                          'Email',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: 370,
-                    child: TextFormField(
-                      controller: passwordController,
-                      validator: (value) {
-                        if (value!.length < 6 || value.isEmpty) {
-                          return 'Please enter a valid password';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        label: const Text(
-                          'Password',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: 350,
-                    height: 60,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(35.0),
+                        },
+                        decoration: InputDecoration(
+                          label: const Text(
+                            'Name',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25),
                           ),
                         ),
                       ),
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          AppCubit.get(context).userName = nameController.text;
-                          AppCubit.get(context).userEmail = emailController.text;
-                          AppCubit.get(context).userPassword = passwordController.text;
-                          AppCubit.get(context).registerNewUser(
-                            context,
-                            emailController.text,
-                            passwordController.text,
-                          );
-                        }
-                      },
-                      child: const Text(
-                        'Sign up',
-                        style: TextStyle(fontSize: 22),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: 370,
+                      child: TextFormField(
+                        controller: emailController,
+                        validator: (value) {
+                          if (value != null && EmailValidator.validate(value)) {
+                            return null;
+                          } else {
+                            return 'Please enter a valid email !!';
+                          }
+                        },
+                        decoration: InputDecoration(
+                          label: const Text(
+                            'Email',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: 370,
+                      child: TextFormField(
+                        controller: passwordController,
+                        validator: (value) {
+                          if (value!.length < 6 || value.isEmpty) {
+                            return 'Please enter a valid password';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          label: const Text(
+                            'Password',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: 350,
+                      height: 60,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(35.0),
+                            ),
+                          ),
+                        ),
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            AppCubit.get(context).userName = nameController.text;
+                            AppCubit.get(context).userEmail = emailController.text;
+                            AppCubit.get(context).userPassword = passwordController.text;
+                            AppCubit.get(context).registerNewUser(
+                              context,
+                              emailController.text,
+                              passwordController.text,
+                            );
+                          }
+                        },
+                        child: const Text(
+                          'Sign up',
+                          style: TextStyle(fontSize: 22),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

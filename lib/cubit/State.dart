@@ -14,3 +14,7 @@ class CheckEmailVerification extends AppCubitState {}
 class RegisterNewUserInOuthentication extends AppCubitState {}
 
 class SignIn extends AppCubitState {}
+
+class GetAllUser extends AppCubitState {}
+
+class GetTheNameOfUser extends AppCubitState {}
