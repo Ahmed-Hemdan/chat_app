@@ -1,4 +1,5 @@
 import 'package:chat_app/Screens/Home/HomeScreen.dart';
+import 'package:chat_app/Screens/Messages/MessagesScreen.dart';
 import 'package:chat_app/Screens/People/PeopleScreen.dart';
 import 'package:chat_app/Screens/Profile/ProfileScreen.dart';
 import 'package:chat_app/Screens/SignIn/SignInScreen.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
               "/HomeScreen": (context) => const HomeScreen(),
               "/PeopleScreen": (context) => PeopleScreen(),
               "/ProfileScreen": (context) => ProfileScreen(),
+              "/MessagesScreen":(context) => MessagesScreen(),
             },
             theme: lightTheme(),
             darkTheme: darkTheme(),
