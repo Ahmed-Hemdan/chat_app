@@ -25,7 +25,6 @@ class ProfileScreen extends StatelessWidget {
           ),
           Text("${AppCubit.get(context).theNameOfUser}"),
           Text(_auth.currentUser!.email.toString()),
-          Text(_auth.currentUser!.uid),
           IconButton(
             onPressed: () async {
               try {

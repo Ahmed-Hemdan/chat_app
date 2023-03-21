@@ -1,3 +1,4 @@
+import 'package:chat_app/Models/MessageModel.dart';
 import 'package:chat_app/Models/UserModel.dart';
 import 'package:chat_app/Screens/People/PeopleScreen.dart';
 import 'package:chat_app/Screens/Profile/ProfileScreen.dart';
@@ -79,7 +80,7 @@ class AppCubit extends Cubit<AppCubitState> {
     try {
       await _db.collection("Users").doc(auth.currentUser!.uid).set(user.toJson());
     } catch (error) {
-      print(error);
+      print(error.toString());
     }
     emit(CreateUserToFirebase());
   }
@@ -109,7 +110,7 @@ class AppCubit extends Cubit<AppCubitState> {
         id: auth.currentUser!.uid,
         password: userPassword,
       );
-      AppCubit.get(context).createUserOnCollection(user).then((value) {
+      createUserOnCollection(user).then((value) {
         Navigator.pushNamedAndRemoveUntil(
           context,
           "/HomeScreen",
@@ -146,6 +147,27 @@ class AppCubit extends Cubit<AppCubitState> {
           },
         );
     emit(GetTheNameOfUser());
+  }
+
+  Future<void> creatChatCollectoin(String anotherUserUid) async {
+    try {
+      await _db.collection("Chats").doc("${auth.currentUser!.uid}+$anotherUserUid");
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  MessageModel? message;
+  String? theMessage;
+  String? anotherUserId;
+  String? anotherUserName;
+  Future<void> creatConversationInCollection() async {
+    try {
+      message = MessageModel(messsage: theMessage, id: auth.currentUser!.uid);
+      await _db.collection("Chats").doc("${auth.currentUser!.uid}+$anotherUserId").collection("Messages").add(message!.toJson());
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
 //   final FirebaseStorage storage = FirebaseStorage.instance;
