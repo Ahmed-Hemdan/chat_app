@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:chat_app/Models/MessageModel.dart';
 import 'package:chat_app/Models/UserModel.dart';
 import 'package:chat_app/Screens/People/PeopleScreen.dart';
@@ -87,10 +89,21 @@ class AppCubit extends Cubit<AppCubitState> {
 
   singin(context, String email, String password) async {
     try {
-      await auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      await auth
+          .signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          )
+          .then(
+            (value) => getNameOfUser(),
+          )
+          .then(
+            (value) => Navigator.pushNamedAndRemoveUntil(
+              context,
+              "/HomeScreen",
+              (route) => false,
+            ),
+          );
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -128,9 +141,6 @@ class AppCubit extends Cubit<AppCubitState> {
           ),
         ),
       );
-      print(auth.currentUser);
-      print(AppCubit.get(context).auth.currentUser!.email);
-      print(AppCubit.get(context).auth.currentUser!.emailVerified);
     }
     emit(CheckEmailVerification());
   }
@@ -151,9 +161,9 @@ class AppCubit extends Cubit<AppCubitState> {
 
   Future<void> creatChatCollectoin(String anotherUserUid) async {
     try {
-      await _db.collection("Chats").doc("${auth.currentUser!.uid}+$anotherUserUid");
+      _db.collection("Chats").doc("${auth.currentUser!.uid}+$anotherUserUid");
     } catch (e) {
-      print(e.toString());
+      null;
     }
   }
 
@@ -161,26 +171,26 @@ class AppCubit extends Cubit<AppCubitState> {
   String? theMessage;
   String? anotherUserId;
   String? anotherUserName;
+
   Future<void> creatConversationInCollection() async {
     try {
-      message = MessageModel(messsage: theMessage, id: auth.currentUser!.uid);
-      await _db.collection("Chats").doc("${auth.currentUser!.uid}+$anotherUserId").collection("Messages").add(message!.toJson());
+      String time = DateTime.now().toString();
+      message = MessageModel(messsage: theMessage, id: auth.currentUser!.uid, time: time);
+      await _db
+          .collection("Users")
+          .doc(auth.currentUser!.uid)
+          .collection("Chats")
+          .doc(anotherUserId)
+          .collection("messages")
+          .add(
+            message!.toJson(),
+          )
+          .then((value) => _db.collection("Users").doc(anotherUserId).collection("Chats").doc(auth.currentUser!.uid).collection("messages").add(
+                message!.toJson(),
+              ));
     } catch (e) {
-      print(e.toString());
+      null;
     }
+    emit(CreatConversationInCollection());
   }
-
-//   final FirebaseStorage storage = FirebaseStorage.instance;
-
-// final Reference reference = storage.ref().child('profile_images/${userId}');
-
-// final ImagePicker _picker = ImagePicker();
-
-// final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-
-// final File file = File(image!.path);
-
-// final TaskSnapshot taskSnapshot = await reference.putFile(file);
-
-// final String imageUrl = await taskSnapshot.ref.getDownloadURL();
 }
