@@ -18,3 +18,5 @@ class SignIn extends AppCubitState {}
 class GetAllUser extends AppCubitState {}
 
 class GetTheNameOfUser extends AppCubitState {}
+
+class CreatConversationInCollection extends AppCubitState {}
