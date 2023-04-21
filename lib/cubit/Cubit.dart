@@ -1,4 +1,5 @@
-import 'dart:ffi';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:chat_app/Models/MessageModel.dart';
 import 'package:chat_app/Models/UserModel.dart';
@@ -6,8 +7,10 @@ import 'package:chat_app/Screens/People/PeopleScreen.dart';
 import 'package:chat_app/Screens/Profile/ProfileScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 part 'State.dart';
 
@@ -192,5 +195,30 @@ class AppCubit extends Cubit<AppCubitState> {
       null;
     }
     emit(CreatConversationInCollection());
+  }
+
+  var image;
+  String? downloadURL;
+  getImageFromGallery() async {
+    image = await ImagePicker().pickImage(source: ImageSource.gallery);
+  }
+
+  getImageFromCamera() async {
+    image = await ImagePicker().pickImage(source: ImageSource.camera);
+  }
+
+  uploadPhotoToFirebase() async {
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref = storage.ref().child('images/${auth.currentUser!.uid}.jpg');
+      File file = File(image.path);
+      Uint8List imageBytes = await file.readAsBytes();
+      UploadTask uploadTask = ref.putData(imageBytes);
+      downloadURL = await ref.getDownloadURL();
+      print(downloadURL);
+    } catch (e) {
+      print(e.toString());
+    }
+    emit(UploadImageToFirebase());
   }
 }
