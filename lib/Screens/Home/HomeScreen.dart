@@ -23,6 +23,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             child: NavigationBar(
+              height: 65,
               selectedIndex: AppCubit.get(context).currentIndex,
               onDestinationSelected: (value) {
                 AppCubit.get(context).changeCurrentIndex(value);
@@ -30,8 +31,7 @@ class HomeScreen extends StatelessWidget {
               destinations: AppCubit.get(context).bottomNavItem,
             ),
           ),
-          body: AppCubit.get(context)
-              .screenList[AppCubit.get(context).currentIndex],
+          body: AppCubit.get(context).screenList[AppCubit.get(context).currentIndex],
         );
       },
     );

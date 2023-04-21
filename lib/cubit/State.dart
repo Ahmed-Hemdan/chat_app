@@ -20,3 +20,5 @@ class GetAllUser extends AppCubitState {}
 class GetTheNameOfUser extends AppCubitState {}
 
 class CreatConversationInCollection extends AppCubitState {}
+
+class UploadImageToFirebase extends AppCubitState{}

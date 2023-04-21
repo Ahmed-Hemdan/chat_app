@@ -1,7 +1,6 @@
 import 'package:chat_app/Componant/MessageComponant.dart';
 import 'package:chat_app/cubit/Cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -44,7 +43,6 @@ class MessagesScreen extends StatelessWidget {
                             ? Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ListView.builder(
-                                  
                                   physics: const BouncingScrollPhysics(),
                                   shrinkWrap: true,
                                   itemBuilder: (context, index) {
